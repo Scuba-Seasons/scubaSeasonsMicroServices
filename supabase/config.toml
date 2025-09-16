@@ -2,10 +2,10 @@
 
 [functions.ping]
 verify_jwt = false
-import_map = "./functions/ping/import_map.json"
+import_map = "./import_map.json"
 # entrypoint defaults to ./functions/ping/index.ts
 
 [functions.hello]
 verify_jwt = false
-import_map = "./functions/hello/import_map.json"
+import_map = "./import_map.json"
 # entrypoint defaults to ./functions/hello/index.ts
