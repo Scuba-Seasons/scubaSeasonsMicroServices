@@ -37,7 +37,7 @@ export const handler = async (req: Request) => {
       dbStatus = "ok";
     }
 
-    return json({ ok: true, data, dbStatus, myMsg: "test-matt" });
+    return json({ ok: true, data, dbStatus, myMsg: "test-only-ping-function" });
   } catch (err: any) {
     return json({ ok: false, message: err?.message ?? String(err) }, 500);
   }
