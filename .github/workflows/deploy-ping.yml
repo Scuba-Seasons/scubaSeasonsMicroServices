@@ -21,6 +21,7 @@ jobs:
           deno-version: v1.x
       - run: deno task test
       - run: deno task coverage
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -32,4 +33,15 @@ jobs:
       - uses: supabase/setup-cli@v1
         with:
           version: latest
-      - run: supabase functions deploy --project-ref $SUPABASE_PROJECT_REF
+      - name: Detect changed functions
+        id: changed
+        run: |
+          git fetch origin ${{ github.event.before }}
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^supabase/functions/' | awk -F'/' '{print $3}' | sort | uniq)
+          echo "changed_functions=$CHANGED" >> $GITHUB_OUTPUT
+      - name: Deploy changed functions
+        if: steps.changed.outputs.changed_functions != ''
+        run: |
+          for fn in ${{ steps.changed.outputs.changed_functions }}; do
+            supabase functions deploy $fn --project-ref $SUPABASE_PROJECT_REF
+          done
