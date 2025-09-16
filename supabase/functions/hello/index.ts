@@ -8,11 +8,17 @@ interface IRequestPayload {
 }
 
 /**
- * A simple hello function that returns a greeting message.
- * It expects a query parameter `name`.
- * If the `name` parameter is missing, it returns an error.
- * Example request: /hello?name=Alice
- * Example response: { ok: true, data: { message: "Hello Alice!" } }
+ * A simple hello function that greets the user by name.
+ * It accepts both GET and POST requests.
+ * For GET requests, it expects a `name` query parameter.
+ * For POST requests, it expects a JSON body with a `name` field.
+ * If the `name` parameter is missing, it returns a 400 error.
+ * If the request method is not GET or POST, it returns a 405 error.
+ * Returns a JSON response with a greeting message.
+ * Example response:
+ * { ok: true, data: { message: "Hello John!" } }
+ * or if there is an error:
+ * { ok: false, message: "error message" }
  * @param req 
  * @returns 
  */
@@ -20,13 +26,10 @@ export const handler = async (req: Request) => {
   try {
 
     let name: string | undefined;
-    console.log('[hello] request method:', req.method);
     if (req.method === "GET") {
-      console.log('[hello] handling GET request');
       const url = new URL(req.url);
       name = url.searchParams.get("name") ?? undefined;
     } else if (req.method === "POST") {
-      console.log('[hello] handling POST request');
       const body: IRequestPayload = await req.json();
       name = body.name;
     } else {
@@ -37,7 +40,6 @@ export const handler = async (req: Request) => {
     const data = {
       message: `Hello ${name}!`,
     };
-    console.log('[hello] response data:', data);
     return json({ ok: true, data });
   } catch (err: any) {
     console.error('[hello] error:', err);
