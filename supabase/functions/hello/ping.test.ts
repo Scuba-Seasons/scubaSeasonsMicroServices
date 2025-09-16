@@ -15,7 +15,7 @@ Deno.test("GET /hello?name=Vlad -> 200", async () => {
 
   const body = await json(res);
   assertEquals(body.ok, true);
-  assertEquals(body.data?.message, "Hello Vlad!");
+  assertEquals(body.data?.message, "Hello Vlad! version-1");
 });
 
 Deno.test("POST /hello { name } -> 200", async () => {
@@ -29,7 +29,7 @@ Deno.test("POST /hello { name } -> 200", async () => {
 
   const body = await json(res);
   assertEquals(body.ok, true);
-  assertEquals(body.data?.message, "Hello Vlad!");
+  assertEquals(body.data?.message, "Hello Vlad! version-1");
 });
 
 Deno.test("GET /hello (missing name) -> 500 (current behavior)", async () => {
