@@ -16,18 +16,31 @@ interface IRequestPayload {
  * @param req 
  * @returns 
  */
-export const handler = (req: Request) => {
+export const handler = async (req: Request) => {
   try {
-    const url = new URL(req.url);
-    const name = url.searchParams.get("name");
 
-    if (!name) throw new Error("Missing 'name' query parameter");
+    let name: string | undefined;
+    console.log('[hello] request method:', req.method);
+    if (req.method === "GET") {
+      console.log('[hello] handling GET request');
+      const url = new URL(req.url);
+      name = url.searchParams.get("name") ?? undefined;
+    } else if (req.method === "POST") {
+      console.log('[hello] handling POST request');
+      const body: IRequestPayload = await req.json();
+      name = body.name;
+    } else {
+      return json({ ok: false, message: "Method Not Allowed" }, 405);
+    }
 
+    if (!name) throw new Error("Missing 'name'");
     const data = {
       message: `Hello ${name}!`,
     };
+    console.log('[hello] response data:', data);
     return json({ ok: true, data });
   } catch (err: any) {
+    console.error('[hello] error:', err);
     return json({ ok: false, message: err?.message ?? String(err) }, 500);
   }
 };
