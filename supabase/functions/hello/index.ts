@@ -24,8 +24,8 @@ interface IRequestPayload {
  */
 export const handler = async (req: Request) => {
   try {
-
     let name: string | undefined;
+
     if (req.method === "GET") {
       const url = new URL(req.url);
       name = url.searchParams.get("name") ?? undefined;
@@ -38,7 +38,7 @@ export const handler = async (req: Request) => {
 
     if (!name) throw new Error("Missing 'name'");
     const data = {
-      message: `Hello ${name}!`,
+      message: `Hello ${name}! version-1`,
     };
     return json({ ok: true, data });
   } catch (err: any) {
